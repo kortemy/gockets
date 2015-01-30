@@ -1,0 +1,12 @@
+{
+    "name": "gockets",
+    "title": "Gockets",
+    "homepage": "https://github.com/kortemy/gockets",
+    "description": "Golang support plugin for Brackets.io editor",
+    "version": "0.0.1",
+    "author": "Dusan Lilic",
+    "license": "MIT",
+    "engines": {
+        "brackets": ">=0.31.0"
+    }
+}
