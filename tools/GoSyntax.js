@@ -1,7 +1,8 @@
-/*global define,brackets,console,CodeMirror*/
+/*global define,brackets,console*/
 define(function (require, exports, module) {
     'use strict';
     var LanguageManager = brackets.getModule("language/LanguageManager"),
+        CodeMirror = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror"),
         that = {
             id: "go.syntax",
             init: function () {

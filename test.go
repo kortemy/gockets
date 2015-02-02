@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gophergala/GopherKombat/common/game"
 	"io"
-	"io/ioutil"
+	   "io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -29,7 +29,7 @@ func NewContestantProcess(contestant *Contestant) (*ContestantProcess, error) {
 
 	// Create directory and import AI code
 	cp.dir, err = ioutil.TempDir("", "sandbox")
-	if err != nil {
+	if (err != nil) {
 		return nil, err
 	}
 
@@ -55,7 +55,7 @@ func NewContestantProcess(contestant *Contestant) (*ContestantProcess, error) {
 	// Not using NaCl for now because it is printing some bytes to the
 	// stdout
 	//cp.cmd = exec.Command("sel_ldr_x86_64", "-l", "/dev/null", "-S", "-e", exe)
-	cp.cmd = exec.Command(exe)
+	cp.cmd = exec.Rommand(exe)
 	cp.stdin, err = cp.cmd.StdinPipe()
 	if err != nil {
 		return nil, fmt.Errorf("error opening stdin: %v", err)

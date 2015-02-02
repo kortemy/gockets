@@ -5,18 +5,27 @@ maxerr: 50, node: true */
     "use strict";
 
     var os = require("os"),
-        execute = function (command, callback) {
+        execute = function (command, args, callback) {
             var os = require('os'),
                 sys = require('sys'),
-                exec = require('child_process').exec,
+                exec = require('child_process').execFile,
                 puts = function (error, stdout, stderr) {
-                    callback(stdout, error);
+                    var code,
+                        resp;
+                    if (error === null) {
+                        resp = stdout;
+                        code = 0;
+                    } else {
+                        resp = error;
+                        code = 1;
+                    }
+                    callback(resp, code);
                 };
-            return exec(command, puts);
+            return exec(command, args, puts);
         },
         goFmtResponse,
         gofmt = function (file) {
-            var process = execute("gofmt " + file, goFmtResponse);
+            var process = execute("gofmt", [file], goFmtResponse);
         },
         initGoFmtCommand = function (domainManager) {
             domainManager.registerCommand(
@@ -45,8 +54,8 @@ maxerr: 50, node: true */
                     description: "payload"
                 }, {
                     name: "error",
-                    type: "string",
-                    description: "error message"
+                    type: "number",
+                    description: "error code"
                 }]
             );
             goFmtResponse = function (data, error) {
