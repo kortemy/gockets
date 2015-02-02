@@ -2,9 +2,9 @@
 define(function (require, exports, module) {
     'use strict';
     var that,
-        GOFMT = "gofmt",
-        GOFMT_RESP = "gofmt_response",
-        GOFMT_CMD_ID = "go.gofmt",
+        GOIMPORTS = "goimports",
+        GOIMPORTS_RESP = "goimports_response",
+        GOIMPORTS_CMD_ID = "go.goimports",
 
         EditorManager = brackets.getModule("editor/EditorManager"),
         CommandManager = brackets.getModule("command/CommandManager"),
@@ -31,7 +31,7 @@ define(function (require, exports, module) {
                 } else {
                     (function () {
                         var Dialogs = require("Dialogs");
-                        Dialogs.showError(GOFMT, data);
+                        Dialogs.showError(GOIMPORTS, data);
                     }());
                 }
             }
@@ -44,7 +44,7 @@ define(function (require, exports, module) {
                 path = file.fullPath;
             if (editor && FileUtils.getFileExtension(path) === 'go') {
                 triggered = true;
-                GoDomain.exec(GOFMT, path);
+                GoDomain.exec(GOIMPORTS, path);
             }
         };
 
@@ -54,14 +54,14 @@ define(function (require, exports, module) {
             GoMenu = menu;
             var DocumentManager = brackets.getModule("document/DocumentManager"),
                 Menus = brackets.getModule("command/Menus");
-            
-            CommandManager.register("Do gofmt", GOFMT_CMD_ID, format);
-            GoMenu.addMenuItem(GOFMT_CMD_ID);
+
+            CommandManager.register("Do goimports", GOIMPORTS_CMD_ID, format);
+            GoMenu.addMenuItem(GOIMPORTS_CMD_ID);
             //DocumentManager.on("documentSaved", format);
-            GoDomain.on(GOFMT_RESP, formatCallback);
+            GoDomain.on(GOIMPORTS_RESP, formatCallback);
         },
         getCommand: function () {
-            return GOFMT_CMD_ID;
+            return GOIMPORTS_CMD_ID;
         }
     };
     return that;

@@ -1,4 +1,3 @@
-/*global CodeMirror*/
 /*global define*/
 /*global brackets*/
 define(function (require, exports, module) {
@@ -9,24 +8,26 @@ define(function (require, exports, module) {
     AppInit.appReady(function () {
         var GoFormat = require("tools/GoFormat"),
             GoSyntax = require("tools/GoSyntax"),
+            GoImports = require("tools/GoImports"),
             Menus = brackets.getModule("command/Menus"),
             Preferences = require("Preferences"),
-            
+            GoMenu = Menus.addMenu("Go", "go.menu", Menus.BEFORE, Menus.AppMenuBar.HELP_MENU),
+            ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
+            NodeDomain = brackets.getModule("utils/NodeDomain"),
+            GoDomain = new NodeDomain("go", ExtensionUtils.getModulePath(module, "node/GoDomain")),
             initMenu = function () {
-                var goMenu = Menus.addMenu("Go", "go.menu", Menus.BEFORE, Menus.AppMenuBar.HELP_MENU);
-                
-                goMenu.addMenuItem(Preferences.GOFMT);
-                goMenu.addMenuItem(Preferences.GOIMPORTS);
-                goMenu.addMenuItem(Preferences.GOLINT);
-                goMenu.addMenuItem(Preferences.GOVET);
-                goMenu.addMenuItem(Preferences.GOCODE);
+                GoMenu.addMenuDivider();
+                GoMenu.addMenuItem(Preferences.GOFMT);
+                GoMenu.addMenuItem(Preferences.GOIMPORTS);
+                GoMenu.addMenuItem(Preferences.GOLINT);
+                GoMenu.addMenuItem(Preferences.GOVET);
+                GoMenu.addMenuItem(Preferences.GOCODE);
             };
-        Preferences.init();
-        GoSyntax.init();
-        if (Preferences.getPref(Preferences.GOFMT)) {
-            GoFormat.init();
-        }
         
+        GoSyntax.init();
+        GoFormat.init(GoDomain, GoMenu);
+        GoImports.init(GoDomain, GoMenu);
+        Preferences.init();
         initMenu();
     });
 });
