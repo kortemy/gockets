@@ -8,7 +8,7 @@ define(function (require, exports, module) {
             init: function () {
                 CodeMirror.defineMIME("text/x-go", "go");
                 LanguageManager.defineLanguage("go", {
-                    name: "Golang",
+                    name: "Go (Golang)",
                     mode: "go",
                     fileExtensions: ["go"],
                     blockComment: ["/*", "*/"],

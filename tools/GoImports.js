@@ -30,7 +30,7 @@ define(function (require, exports, module) {
                     }());
                 } else {
                     (function () {
-                        var Dialogs = require("Dialogs");
+                        var Dialogs = require("ext/Dialogs");
                         Dialogs.showError(GOIMPORTS, data);
                     }());
                 }

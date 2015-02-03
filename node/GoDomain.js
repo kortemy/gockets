@@ -114,8 +114,11 @@ maxerr: 50, node: true */
                 major: 0,
                 minor: 1
             });
-            process.env.PATH = process.env.PATH + ":" + process.env.GOPATH + "/bin";
-            process.env.PATH = process.env.PATH + ":/usr/local/go/bin";
+            // fix $PATH on linux
+            if (process.platform !== 'win32') {
+                process.env.PATH = process.env.PATH + ":" + process.env.GOPATH + "/bin";
+                process.env.PATH = process.env.PATH + ":/usr/local/go/bin";
+            }
         }
         initGoFmtCommand(domainManager);
         initGoImportsCommand(domainManager);
