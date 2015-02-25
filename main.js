@@ -18,7 +18,7 @@ define(function (require, exports, module) {
             GoDomain = new NodeDomain("go", ExtensionUtils.getModulePath(module, "node/GoDomain"));
         
         GoSyntax.init();
-        GoLint.init();
+        GoLint.init(GoDomain);
         GoFormat.init(GoDomain, GoMenu);
         GoImports.init(GoDomain, GoMenu);
         GoMenu.addMenuDivider();

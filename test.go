@@ -11,4 +11,9 @@ func main() {
 		buffer.WriteString("a")
 	}
 	fmt.Println(buffer.String())
+	if bar > 0 {
+		return 123
+	} else {
+		return 456
+	}
 }
