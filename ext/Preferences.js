@@ -22,8 +22,14 @@ define(function (require, exports, module) {
             return StateManager.get(code);
         },
         setPref = function (tool, value) {
-            CommandManager.get(tool.pref).setChecked(value);
-            CommandManager.get(tool.cmd).setEnabled(value);
+            var pref = CommandManager.get(tool.pref),
+                cmd = CommandManager.get(tool.cmd);
+            if (pref) {
+                pref.setChecked(value);
+            }
+            if (cmd) {
+                cmd.setEnabled(value);
+            }
             StateManager.set(tool.pref, value);
         };
     GOIMPORTS = {
@@ -90,17 +96,17 @@ define(function (require, exports, module) {
         cmd: "go.golint",
         init: function () {
             StateManager.definePreference(GOLINT.pref, "boolean", true);
-            CommandManager.register(Labels.GOFMT, GOLINT.pref, GOLINT.toggle);
+            CommandManager.register(Labels.GOLINT, GOLINT.pref, GOLINT.toggle);
             GoMenu.addMenuItem(GOLINT.pref);
             if (StateManager.get(GOLINT.pref)) {
                 GOLINT.enable();
             }
         },
         enable: function () {
-            setPref(GOFMT, true);
+            setPref(GOLINT, true);
         },
         disable: function () {
-            setPref(GOFMT, false);
+            setPref(GOLINT, false);
         },
         toggle: function () {
             if (StateManager.get(GOLINT.pref)) {
@@ -119,6 +125,7 @@ define(function (require, exports, module) {
         init: function (menu) {
             GoMenu = menu;
             GOFMT.init();
+            GOLINT.init();
         },
         getPref: function (code) {
             return getPref(code);

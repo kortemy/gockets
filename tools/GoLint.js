@@ -5,7 +5,11 @@ define(function (require, exports, module) {
         GOLINT = "golint",
         GOLINT_RESP = "golint_response",
         GOLINT_CMD_ID = "go.golint",
+        pref = "pref.golint",
+        
+        EditorManager = brackets.getModule("editor/EditorManager"),
         CodeInspection = brackets.getModule("language/CodeInspection"),
+        CommandManager = brackets.getModule("command/CommandManager"),
         FileUtils = brackets.getModule("file/FileUtils"),
         GoDomain,
         Deferred,
@@ -40,8 +44,14 @@ define(function (require, exports, module) {
         linter = {
             name: "GoLint",
             scanFileAsync: function (text, path) {
+                var PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
+                    StateManager = PreferencesManager.stateManager.getPrefixedSystem("gockets");
                 Deferred = $.Deferred();
-                GoDomain.exec(GOLINT, path);
+                if (StateManager.get(pref)) {
+                    GoDomain.exec(GOLINT, path);
+                } else {
+                    Deferred.resolve(null);
+                }
                 return Deferred;
             }
         },
@@ -55,7 +65,6 @@ define(function (require, exports, module) {
             } else {
                 Deferred.resolve(null);
             }
-            
         };
     that = {
         init: function (domain) {
