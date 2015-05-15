@@ -22,9 +22,6 @@ var response,
             puts = function (error, stdout, stderr) {
                 var code,
                     resp;
-                console.log("StdOut: " + stdout);
-                console.log("StdErr: " + stderr);
-                console.log("Error: " + error);
                 if (!error) {
                     resp = stdout || stderr;
                     code = stdout ? 0 : 1;
@@ -34,7 +31,7 @@ var response,
                 }
                 callback(resp, code);
             };
-        return exec(command, args, puts);
+        exec(command, args, puts);
     },
     handler = function (file) {
         var process = execute(command, [file], response);

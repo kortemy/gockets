@@ -6,36 +6,56 @@ define(function (require, exports, module) {
         GOLINT_RESP = "golint_response",
         GOLINT_CMD_ID = "go.golint",
         CodeInspection = brackets.getModule("language/CodeInspection"),
+        FileUtils = brackets.getModule("file/FileUtils"),
         GoDomain,
-        Deferred = $.Deferred(),
+        Deferred,
+        parseLine = function (lineStr) {
+            var filenameExp = /([^(\\|\/)]+\.go)/,
+                messageExp = /\d+:\d+:(.+)/,
+                lineExp = /\.go:(\d+:\d+:)/,
+                filename = filenameExp.exec(lineStr)[1] || '',
+                message = messageExp.exec(lineStr)[1] || '',
+                lines = lineExp.exec(lineStr)[1] || '',
+                line = lines.split(':')[0],
+                ch = lines.split(':')[1],
+                text = message + "\t\t";
+            return {
+                pos: {
+                    line: parseInt(line, 10) - 1,
+                    ch: parseInt(ch, 10) - 1
+                },
+                message: text,
+                type: CodeInspection.Type.WARNING
+            };
+        },
+        parseErrors = function (lines) {
+            var resp = [];
+            lines.forEach(function (e) {
+                if (e || e !== '') {
+                    resp.push(parseLine(e));
+                }
+            });
+            return resp;
+        },
         linter = {
             name: "GoLint",
             scanFileAsync: function (text, path) {
-                var promise = GoDomain.exec(GOLINT, path),
-                    error = {
-                        pos: {
-                            line: 3,
-                            ch: 1
-                        },
-                        message: "Dummy message",
-                        type: CodeInspection.Type.WARNING
-                    };
-                promise.done(function (a1, a2, a3, a4, a5) {
-                    console.log(a1);
-                    console.log(a2);
-                    console.log(a3);
-                    console.log(a4);
-                    console.log(a5);
-                });
-                
-                return $.promise("obj", {
-                    errors: [],
-                    aborted: false
-                });
+                Deferred = $.Deferred();
+                GoDomain.exec(GOLINT, path);
+                return Deferred;
             }
         },
         lintCallback = function (event, data, error) {
-            Deferred.resolve(data);
+            var lines = data.match(/[^\r\n]+/g);
+            if (lines) {
+                Deferred.resolve({
+                    errors: parseErrors(lines),
+                    aborted: false
+                });
+            } else {
+                Deferred.resolve(null);
+            }
+            
         };
     that = {
         init: function (domain) {

@@ -85,6 +85,31 @@ define(function (require, exports, module) {
             }
         }
     };
+    GOLINT = {
+        pref: "pref.golint",
+        cmd: "go.golint",
+        init: function () {
+            StateManager.definePreference(GOLINT.pref, "boolean", true);
+            CommandManager.register(Labels.GOFMT, GOLINT.pref, GOLINT.toggle);
+            GoMenu.addMenuItem(GOLINT.pref);
+            if (StateManager.get(GOLINT.pref)) {
+                GOLINT.enable();
+            }
+        },
+        enable: function () {
+            setPref(GOFMT, true);
+        },
+        disable: function () {
+            setPref(GOFMT, false);
+        },
+        toggle: function () {
+            if (StateManager.get(GOLINT.pref)) {
+                GOLINT.disable();
+            } else {
+                GOLINT.enable();
+            }
+        }
+    };
     return {
         GOIMPORTS: GOIMPORTS,
         GOFMT: GOFMT,
